@@ -1,0 +1,11 @@
+{
+  "app.env": "NODE_ENV",
+  "mongodb": "MONGO_URI",
+  "jwtSecret": "JWT_SECRET",
+  "aws.s3": {
+    "bucket": "S3_BUCKET",
+    "key": "S3_KEY",
+    "public": "S3_PUBLIC_KEY",
+    "secret": "S3_SECRET_KEY"
+  }
+}

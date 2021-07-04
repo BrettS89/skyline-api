@@ -1,0 +1,67 @@
+// security/user-model.ts - A mongoose model
+//
+// See http://mongoosejs.com/docs/models.html
+// for more of what you can do here.
+import { Application } from '../declarations';
+import { Model, Mongoose } from 'mongoose';
+
+export default function (app: Application): Model<any> {
+  const modelName = 'security/user';
+  const mongooseClient: Mongoose = app.get('mongooseClient');
+  const { Schema } = mongooseClient;
+  const schema = new Schema({
+    account_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'security/account',
+    },
+    role_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'security/role',
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    github_username: {
+      type: String,
+    },
+    github_orgs: [{
+      type: String,
+    }],
+    github_access_key: {
+      type: String,
+    },
+    aws_region: {
+      type: String,
+      enum: [
+        'us-east-1',
+        'us-east-2',
+        'us-west-1',
+        'us-west-2',
+      ],
+      default: 'us-east-1',
+    },
+    aws_keys: {
+      access_key_id: {
+        type: String,
+      },
+      secret_access_key: {
+        type: String,
+      },
+    },
+  }, {
+    timestamps: true,
+  });
+
+  // This is necessary to avoid model compilation errors in watch mode
+  // see https://mongoosejs.com/docs/api/connection.html#connection_Connection-deleteModel
+  if (mongooseClient.modelNames().includes(modelName)) {
+    (mongooseClient as any).deleteModel(modelName);
+  }
+  return mongooseClient.model<any>(modelName, schema);
+}
