@@ -7,29 +7,23 @@ export const addHttpsListener = async (context: HookContext): Promise<HookContex
   if (!data.ssl_certificate_arn || !data.environment_name) return context;
 
   const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
-  console.log(data);
   const command = new UpdateEnvironmentCommand({
     EnvironmentName: data.environment_name,
       OptionSettings: [
         {
-          Namespace: 'aws:elbv2:listener:423',
+          Namespace: 'aws:elbv2:listener:443',
           OptionName: 'SSLCertificateArns',
           Value: data.ssl_certificate_arn,
         },
         {
-          Namespace: 'aws:elbv2:listener:423',
+          Namespace: 'aws:elbv2:listener:443',
           OptionName: 'Protocol',
           Value: 'HTTPS'
         }
       ],
   });
 
-  try {
-    await client.send(command);
-  } catch(e) {
-    console.log(e);
-  }
-  
+  await client.send(command);  
 
   delete data.environment_name;
 
