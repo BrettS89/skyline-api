@@ -14,9 +14,7 @@ export default {
       getPipelineRole,
     ],
     update: [],
-    patch: [
-      addEnvVar,
-    ],
+    patch: [],
     remove: [
       deleteHostings,
     ],
