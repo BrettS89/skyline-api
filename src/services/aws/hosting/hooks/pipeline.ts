@@ -34,7 +34,7 @@ export const createPipeline = async (context: HookContext): Promise<HookContext>
                 Owner: data.github_account,
                 Repo: data.github_repo,
                 Branch: data.repo_branch,
-                OAuthToken: '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',
+                OAuthToken: user?.github_access_key,
                 PollForSourceChanges: 'false',
               },
               runOrder: 1,

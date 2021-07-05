@@ -27,6 +27,10 @@ export default function (app: Application): Model<any> {
       type: String,
       required: true,
     },
+    autoscale: {
+      type: Boolean,
+      requried: true,
+    },
     bucket_name: {
       type: String,
       required: true,
