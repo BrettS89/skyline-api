@@ -1,14 +1,14 @@
-// Initializes the `aws/environment` service on path `/aws/environment`
+// Initializes the `aws/kubernetes` service on path `/aws/kubernetes`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../../declarations';
-import { Environment } from './environment.class';
-import createModel from '../../../models/environment.model';
-import hooks from './hooks';
+import { Kubernetes } from './kubernetes.class';
+import createModel from '../../../models/kubernetes.model';
+import hooks from './kubernetes.hooks';
 
 // Add this service to the service type index
 declare module '../../../declarations' {
   interface ServiceTypes {
-    'aws/environment': Environment & ServiceAddons<any>;
+    'aws/kubernetes': Kubernetes & ServiceAddons<any>;
   }
 }
 
@@ -19,10 +19,10 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/aws/environment', new Environment(options, app));
+  app.use('/aws/kubernetes', new Kubernetes(options, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('aws/environment');
+  const service = app.service('aws/kubernetes');
 
   service.hooks(hooks);
 }

@@ -20,6 +20,7 @@ import githubBranch from './github/branch/branch.service';
 import awsStatus from './aws/status/status.service';
 import awsCertificate from './aws/certificate/certificate.service';
 import awsEnvironment from './aws/environment/environment.service';
+import awsKubernetes from './aws/kubernetes/kubernetes.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application): void {
@@ -44,4 +45,5 @@ export default function (app: Application): void {
   app.configure(awsStatus);
   app.configure(awsCertificate);
   app.configure(awsEnvironment);
+  app.configure(awsKubernetes);
 }

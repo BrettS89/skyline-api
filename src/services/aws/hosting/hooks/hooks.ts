@@ -6,7 +6,7 @@ export * from './bucket';
 export * from './beanstalk';
 export * from './delete';
 export * from './pipeline';
-export * from './update-app';
+export * from './update-environment';
 export * from './webhook';
 export * from './execute-pipeline';
 export * from './https';

@@ -12,7 +12,7 @@ import {
   registerWebhook,
   removeWebhook,
   setHostingInParams,
-  updateAppHook,
+  updateEnvironmentHook,
 } from './hooks';
 
 export default {
@@ -46,7 +46,7 @@ export default {
     find: [],
     get: [],
     create: [
-      updateAppHook,
+      updateEnvironmentHook,
     ],
     update: [],
     patch: [],

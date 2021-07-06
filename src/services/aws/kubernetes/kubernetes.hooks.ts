@@ -1,10 +1,7 @@
-import { fastJoin } from 'feathers-hooks-common';
-import { authenticate } from '@/hooks';
-import resolvers from './environment.resolvers';
 
 export default {
   before: {
-    all: [authenticate],
+    all: [],
     find: [],
     get: [],
     create: [],
@@ -14,7 +11,7 @@ export default {
   },
 
   after: {
-    all: [fastJoin(resolvers, ctx => ctx.params.resolve || {})],
+    all: [],
     find: [],
     get: [],
     create: [],
