@@ -18,6 +18,9 @@ export default function (app: Application): Model<any> {
       type: Schema.Types.ObjectId,
       ref: 'aws/hosting',
     },
+    aws_region: {
+      type: String,
+    },
     kubernetes_id: {
       type: Schema.Types.ObjectId,
       ref: 'aws/kubernetes',

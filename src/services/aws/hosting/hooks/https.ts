@@ -1,12 +1,15 @@
 import { HookContext } from '@feathersjs/feathers';
-import { ElasticBeanstalkClient, UpdateEnvironmentCommand } from '@aws-sdk/client-elastic-beanstalk';
+import { DescribeEnvironmentResourcesCommand, ElasticBeanstalkClient, UpdateEnvironmentCommand } from '@aws-sdk/client-elastic-beanstalk';
+import { ElasticLoadBalancingV2Client, DescribeListenersCommand, ModifyListenerCommand } from '@aws-sdk/client-elastic-load-balancing-v2';
 
 export const addHttpsListener = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context;
+  const { app, data, params: { user } } = context;
 
   if (!data.ssl_certificate_arn || !data.environment_name) return context;
 
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+  const credentials = app.awsCreds(user)
+
+  const client = new ElasticBeanstalkClient({ region: data.aws_region, credentials });
   const command = new UpdateEnvironmentCommand({
     EnvironmentName: data.environment_name,
       OptionSettings: [
@@ -20,42 +23,78 @@ export const addHttpsListener = async (context: HookContext): Promise<HookContex
           OptionName: 'Protocol',
           Value: 'HTTPS'
         },
-        {
-          Namespace: 'aws:elasticbeanstalk:environment:process:https',
-          OptionName: 'Port',
-          Value: '443'
-        },
-        {
-          Namespace: 'aws:elasticbeanstalk:environment:process:https',
-          OptionName: 'Protocol',
-          Value: 'HTTPS',
-        },
-        {
-          Namespace: 'aws:elbv2:listenerrule:tohttps',
-          OptionName: 'PathPatterns',
-          Value: '/*',
-        },
-        {
-          Namespace: 'aws:elbv2:listenerrule:tohttps',
-          OptionName: 'Priority',
-          Value: '1',
-        },
-        {
-          Namespace: 'aws:elbv2:listenerrule:tohttps',
-          OptionName: 'Process',
-          Value: 'https',
-        },
-        {
-          Namespace: 'aws:elbv2:listener:80',
-          OptionName: 'Rules',
-          Value: 'tohttps'
-        },
+        // {
+        //   Namespace: 'aws:elasticbeanstalk:environment:process:https',
+        //   OptionName: 'Port',
+        //   Value: '443'
+        // },
+        // {
+        //   Namespace: 'aws:elasticbeanstalk:environment:process:https',
+        //   OptionName: 'Protocol',
+        //   Value: 'HTTPS',
+        // },
+        // {
+        //   Namespace: 'aws:elbv2:listenerrule:tohttps',
+        //   OptionName: 'PathPatterns',
+        //   Value: '/*',
+        // },
+        // {
+        //   Namespace: 'aws:elbv2:listenerrule:tohttps',
+        //   OptionName: 'Priority',
+        //   Value: '1',
+        // },
+        // {
+        //   Namespace: 'aws:elbv2:listenerrule:tohttps',
+        //   OptionName: 'Process',
+        //   Value: 'https',
+        // },
+        // {
+        //   Namespace: 'aws:elbv2:listener:80',
+        //   OptionName: 'Rules',
+        //   Value: 'tohttps'
+        // },
       ],
   });
 
-  await client.send(command);  
+  await client.send(command);
+  await setupHttpsRedirect(client, data.environment_name, data.aws_region, credentials);
 
   delete data.environment_name;
 
   return context;
+};
+
+const setupHttpsRedirect = async (beanstalkClient, environmentName: string, region: string, credentials): Promise<void> => {
+  const loadBalancerClient = new ElasticLoadBalancingV2Client({ region, credentials });
+
+  const res1 = await beanstalkClient.send(
+    new DescribeEnvironmentResourcesCommand({
+      EnvironmentName: environmentName 
+    })
+  );
+
+  const elbArn = res1.EnvironmentResources.LoadBalancers[0].Name;
+
+  const command2 = new DescribeListenersCommand({ LoadBalancerArn: elbArn });
+  const res2 = await loadBalancerClient.send(command2);
+
+  const command3 = new ModifyListenerCommand({
+    ListenerArn: res2?.Listeners?.[0].ListenerArn,
+    DefaultActions: [
+      {
+        Type: 'redirect',
+        Order: 1,
+        RedirectConfig: {
+          Protocol: 'HTTPS',
+          Port: '443',
+          Host: '#{host}',
+          Path: '/#{path}',
+          Query: '#{query}',
+          StatusCode: 'HTTP_301'
+        },
+      },
+    ]
+  });
+
+  await loadBalancerClient.send(command3);
 };

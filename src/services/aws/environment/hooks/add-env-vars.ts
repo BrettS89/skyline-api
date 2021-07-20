@@ -3,7 +3,7 @@ import { NotFound } from '@feathersjs/errors';
 import { ElasticBeanstalkClient, UpdateEnvironmentCommand } from '@aws-sdk/client-elastic-beanstalk';
 
 export const addEnvVar = async (context: HookContext): Promise<HookContext> => {
-  const { app, data, data: { env_vars, remove }, id } = context;
+  const { app, data, data: { env_vars, remove }, id, params: { user } } = context;
   
   if (!env_vars) return context;
 
@@ -26,11 +26,13 @@ export const addEnvVar = async (context: HookContext): Promise<HookContext> => {
 
   if (!environment.hosting_id) return context;
 
+  const credentials = app.awsCreds(user);
+
   if (remove) {
-    await deleteEnvVars(env_vars, environment);
+    await deleteEnvVars(env_vars, environment, credentials);
     data.env_vars = environment.env_vars.filter(e => !env_vars.includes(e));
   } else {
-    await addEnvVarsToBeanstalk(newEnvVars, environment);
+    await addEnvVarsToBeanstalk(newEnvVars, environment, credentials);
   }
   
   delete data.remove;
@@ -38,8 +40,8 @@ export const addEnvVar = async (context: HookContext): Promise<HookContext> => {
   return context;
 }
 
-const addEnvVarsToBeanstalk = async (vars: string[], environment): Promise<void> => {
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+const addEnvVarsToBeanstalk = async (vars: string[], environment, credentials): Promise<void> => {
+  const client = new ElasticBeanstalkClient({ region: environment.aws_region, credentials });
   const environmentName = environment?.resources?.hosting?.provider_environment;
   
   const command = new UpdateEnvironmentCommand({
@@ -54,8 +56,8 @@ const addEnvVarsToBeanstalk = async (vars: string[], environment): Promise<void>
   await client.send(command);
 };
 
-const deleteEnvVars = async (vars: string[], environment) => {
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+const deleteEnvVars = async (vars: string[], environment, credentials) => {
+  const client = new ElasticBeanstalkClient({ region: environment.aws_region, credentials });
   const environmentName = environment?.resources?.hosting?.provider_environment;
   
   const command = new UpdateEnvironmentCommand({

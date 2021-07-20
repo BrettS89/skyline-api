@@ -11,7 +11,7 @@ export default {
     find: [],
     get: [],
     create: [
-      getPipelineRole,
+      // getPipelineRole,
     ],
     update: [],
     patch: [],

@@ -7,7 +7,7 @@ export const updateEnvironmentHook = async (context: HookContext): Promise<HookC
     .service('aws/environment')
     .patch(
       result.environment_id,
-      { hosting_id: result._id },
+      { hosting_id: result._id, aws_region: result.aws_region },
       { internal: true }
     );
 

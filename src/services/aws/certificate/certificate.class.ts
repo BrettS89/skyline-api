@@ -1,34 +1,9 @@
-import { ACMClient, ListCertificatesCommand } from '@aws-sdk/client-acm';
+import { Service, MongooseServiceOptions } from 'feathers-mongoose';
 import { Application } from '../../../declarations';
 
-export class Certificate {
-  app: Application;
-
-  constructor (app: Application) {
-    this.app = app;
+export class Certificate extends Service {
+  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  constructor(options: Partial<MongooseServiceOptions>, app: Application) {
+    super(options);
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async find (params): Promise<Record<string, any>> {
-    const client = new ACMClient({ region: 'us-east-1' });
-
-    let certificates: any = [];
-
-    for (let status of ['ISSUED', 'PENDING_VALIDATION']) {
-      const res = await client.send(new ListCertificatesCommand({ CertificateStatuses: [status] }));
-      const certs = res.CertificateSummaryList?.map(cert => {
-        return {
-          ...cert,
-          status,
-          name: `${cert.DomainName} - ${status}`,
-        };
-      });
-
-      //@ts-ignore
-      certificates = [...certificates, ...certs];
-    }
-
-    return { certificates };
-  }
-
 }

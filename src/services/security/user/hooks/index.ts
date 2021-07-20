@@ -1,5 +1,5 @@
 import { fastJoin } from 'feathers-hooks-common';
-import { hashPassword } from './hooks';
+import { hashPassword, setRole, setupPipelineRoles } from './hooks';
 import resolvers from '@/services/security/user/user.resolvers';
 
 export default {
@@ -7,7 +7,11 @@ export default {
     all: [],
     find: [],
     get: [],
-    create: [hashPassword],
+    create: [
+      hashPassword,
+      setRole,
+      // setupPipelineRoles,
+    ],
     update: [],
     patch: [],
     remove: []

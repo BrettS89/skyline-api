@@ -1,4 +1,4 @@
-// security/user-model.ts - A mongoose model
+// aws/cloudfront-model.ts - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
@@ -6,46 +6,43 @@ import { Application } from '../declarations';
 import { Model, Mongoose } from 'mongoose';
 
 export default function (app: Application): Model<any> {
-  const modelName = 'security/user';
+  const modelName = 'aws/certificate2';
   const mongooseClient: Mongoose = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const schema = new Schema({
-    account_id: {
+    user_id: {
       type: Schema.Types.ObjectId,
-      ref: 'security/account',
-    },
-    role_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'security/role',
-    },
-    email: {
-      type: String,
       required: true,
-      unique: true,
     },
-    password: {
+    domain: {
       type: String,
       required: true,
     },
-    github_username: {
+    arn: {
       type: String,
+      required: true
     },
-    github_orgs: [{
-      type: String,
-    }],
-    github_access_key: {
-      type: String,
-    },
-    aws_keys: {
-      access_key_id: {
+    cname: {
+      name: {
         type: String,
       },
-      secret_access_key: {
+      type: {
+        type: String,
+      },
+      value: {
         type: String,
       },
     },
+    status: {
+      type: String,
+      required: true,
+    },
+    aws_region: {
+      type: String,
+      required: true,
+    }
   }, {
-    timestamps: true,
+    timestamps: true
   });
 
   // This is necessary to avoid model compilation errors in watch mode

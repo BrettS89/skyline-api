@@ -1,11 +1,12 @@
 import { authenticate } from '@/hooks';
+import { setupCertificate } from './hooks';
 
 export default {
   before: {
     all: [authenticate],
     find: [],
     get: [],
-    create: [],
+    create: [setupCertificate],
     update: [],
     patch: [],
     remove: []

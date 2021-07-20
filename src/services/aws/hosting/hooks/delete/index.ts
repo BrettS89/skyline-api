@@ -14,9 +14,9 @@ export const setHostingInParams = async (context: HookContext): Promise<HookCont
 };
 
 export const removeWebhook = async (context: HookContext): Promise<HookContext> => {
-  const { params: { hosting } } = context;
+  const { app, params: { hosting, user } } = context;
 
-  const client = new CodePipelineClient({ region: 'us-east-1' });
+  const client = new CodePipelineClient({ region: hosting.aws_region, credentials: app.awsCreds(user) });
 
   if (!hosting.webhook_name) return context;
 
@@ -27,18 +27,18 @@ export const removeWebhook = async (context: HookContext): Promise<HookContext> 
 };
 
 export const deletePipeline = async (context: HookContext): Promise<HookContext> => {
-  const { params: { hosting } } = context;
+  const { app, params: { hosting, user } } = context;
 
-  const client = new CodePipelineClient({ region: 'us-east-1' });
+  const client = new CodePipelineClient({ region: hosting.aws_region, credentials: app.awsCreds(user)  });
   await client.send(new DeletePipelineCommand({ name: hosting.pipeline_name }));
 
   return context;
 };
 
 export const terminateBeanstalkEnvironment = async (context: HookContext): Promise<HookContext> => {
-  const { params: { hosting } } = context;
+  const { app, params: { hosting, user } } = context;
 
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+  const client = new ElasticBeanstalkClient({ region: hosting.aws_region, credentials: app.awsCreds(user)  });
 
   await client.send(new TerminateEnvironmentCommand({ EnvironmentName: hosting.provider_environment }));
 
@@ -46,9 +46,9 @@ export const terminateBeanstalkEnvironment = async (context: HookContext): Promi
 };
 
 export const deleteBucket = async (context: HookContext): Promise<HookContext> => {
-  const { params: { hosting } } = context;
+  const { app, params: { hosting, user } } = context;
 
-  const client = new S3Client({ region: 'us-east-1' });
+  const client = new S3Client({ region: hosting.aws_region, credentials: app.awsCreds(user) });
 
   const listObjects = new ListObjectsCommand({
     Bucket: hosting.bucket_name,
