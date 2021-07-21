@@ -2,11 +2,11 @@ import { HookContext } from '@feathersjs/feathers';
 import { CodePipelineClient, PutWebhookCommand, RegisterWebhookWithThirdPartyCommand } from '@aws-sdk/client-codepipeline';
 
 export const registerWebhook = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context;
+  const { app, data, params: { user } } = context;
 
   if (!data.auto_deploy) return context;
 
-  const client = new CodePipelineClient({ region: 'us-east-1' });
+  const client = new CodePipelineClient({ region: data.aws_region, credentials: app.awsCreds(user) });
 
   const command = new PutWebhookCommand({
     webhook: {

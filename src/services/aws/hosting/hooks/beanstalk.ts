@@ -8,7 +8,7 @@ const forSingleInstance = {
 };
 
 export const createBeanstalk = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context;
+  const { app, data, params: { user } } = context;
 
   const optionSettings = [
     {
@@ -32,7 +32,7 @@ export const createBeanstalk = async (context: HookContext): Promise<HookContext
     data.autoscale = true;
   }
 
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+  const client = new ElasticBeanstalkClient({ region: data.aws_region, credentials: app.awsCreds(user) });
   const command = new CreateApplicationCommand({
     ApplicationName: data.application_name,
   });

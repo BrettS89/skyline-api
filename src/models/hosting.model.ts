@@ -15,6 +15,10 @@ export default function (app: Application): Model<any> {
       ref: 'aws/hosting',
       required: true,
     },
+    aws_region: {
+      type: String,
+      required: true,
+    },
     environment_id: {
       type: String,
       required: true,

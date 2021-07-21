@@ -11,8 +11,9 @@ import {
   createPipeline,
   registerWebhook,
   removeWebhook,
+  setAwsRegion,
   setHostingInParams,
-  updateAppHook,
+  updateEnvironmentHook,
 } from './hooks';
 
 export default {
@@ -21,6 +22,7 @@ export default {
     find: [],
     get: [],
     create: [
+      setAwsRegion,
       createBucket,
       getPipelineRole,
       createBeanstalk,
@@ -46,7 +48,7 @@ export default {
     find: [],
     get: [],
     create: [
-      updateAppHook,
+      updateEnvironmentHook,
     ],
     update: [],
     patch: [],

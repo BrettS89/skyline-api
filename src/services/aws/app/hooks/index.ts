@@ -11,12 +11,10 @@ export default {
     find: [],
     get: [],
     create: [
-      getPipelineRole,
+      // getPipelineRole,
     ],
     update: [],
-    patch: [
-      addEnvVar,
-    ],
+    patch: [],
     remove: [
       deleteHostings,
     ],

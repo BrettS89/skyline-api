@@ -1,12 +1,10 @@
-import { authenticate } from '@/hooks';
-import { setupCertificate } from './hooks';
 
 export default {
   before: {
-    all: [authenticate],
+    all: [],
     find: [],
     get: [],
-    create: [setupCertificate],
+    create: [],
     update: [],
     patch: [],
     remove: []

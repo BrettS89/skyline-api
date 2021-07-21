@@ -1,14 +1,14 @@
-// Initializes the `aws/certificate2` service on path `/aws/certificate-2`
+// Initializes the `aws/kubernetes` service on path `/aws/kubernetes`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../../declarations';
-import { Certificate } from './certificate.class';
-import createModel from '../../../models/certificate.model';
-import hooks from './certificate.hooks';
+import { Kubernetes } from './kubernetes.class';
+import createModel from '../../../models/kubernetes.model';
+import hooks from './kubernetes.hooks';
 
 // Add this service to the service type index
 declare module '../../../declarations' {
   interface ServiceTypes {
-    'aws/certificate': Certificate & ServiceAddons<any>;
+    'aws/kubernetes': Kubernetes & ServiceAddons<any>;
   }
 }
 
@@ -19,10 +19,10 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/aws/certificate', new Certificate(options, app));
+  app.use('/aws/kubernetes', new Kubernetes(options, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('aws/certificate');
+  const service = app.service('aws/kubernetes');
 
   service.hooks(hooks);
 }

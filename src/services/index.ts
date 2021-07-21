@@ -18,6 +18,8 @@ import githubAccessToken from './github/access-token/access-token.service';
 import githubRepo from './github/repo/repo.service';
 import githubBranch from './github/branch/branch.service';
 import awsStatus from './aws/status/status.service';
+import awsEnvironment from './aws/environment/environment.service';
+import awsKubernetes from './aws/kubernetes/kubernetes.service';
 import awsCertificate from './aws/certificate/certificate.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -41,5 +43,7 @@ export default function (app: Application): void {
   app.configure(githubRepo);
   app.configure(githubBranch);
   app.configure(awsStatus);
+  app.configure(awsEnvironment);
+  app.configure(awsKubernetes);
   app.configure(awsCertificate);
 }

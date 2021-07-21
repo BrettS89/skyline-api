@@ -1,4 +1,4 @@
-// aws/app-model.ts - A mongoose model
+// aws/kubernetes-model.ts - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
@@ -6,28 +6,11 @@ import { Application } from '../declarations';
 import { Model, Mongoose } from 'mongoose';
 
 export default function (app: Application): Model<any> {
-  const modelName = 'aws/app';
+  const modelName = 'kubernetes';
   const mongooseClient: Mongoose = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const schema = new Schema({
-    account_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'security/account',
-    },
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'security/user',
-      required: true,
-    },
-    name: {
-      type: String,
-      unique: true,
-      required: true,
-    },
-    environment_ids: [{
-      type: Schema.Types.ObjectId,
-      ref: 'aws/environment',
-    }],
+    text: { type: String, required: true }
   }, {
     timestamps: true
   });
