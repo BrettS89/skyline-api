@@ -5,7 +5,7 @@ export const deleteHostings = async (context: HookContext): Promise<HookContext>
 
   const foundApp = await app
     .service('aws/app')
-    .get(id, { internal: true });
+    .get(id, { internal: true, query: { $resolve: { environments: true } } });
 
   await Promise.all(
     foundApp.environments
@@ -16,6 +16,10 @@ export const deleteHostings = async (context: HookContext): Promise<HookContext>
           .remove(env.hosting_id, { internal: true });
       })
   );
+
+  await Promise.all(foundApp.environments.map(e => {
+    return app.service('aws/environment').remove(e._id, { internal: true });
+  }));
 
   return context;
 };

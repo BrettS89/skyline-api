@@ -2,9 +2,9 @@ import { HookContext } from '@feathersjs/feathers';
 import { CloudFrontClient, CreateDistributionCommand } from '@aws-sdk/client-cloudfront';
 
 export const createCloudfrontDistribution = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context;
+  const { app, data, params: { user } } = context;
 
-  const client = new CloudFrontClient({ region: 'us-east-1' });
+  const client = new CloudFrontClient({ region: data.aws_region, credentials: app.awsCreds(user) });
 
   const command = new CreateDistributionCommand({
     DistributionConfig: {

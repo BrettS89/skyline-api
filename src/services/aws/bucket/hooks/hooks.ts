@@ -2,9 +2,9 @@ import { HookContext } from '@feathersjs/feathers';
 import { S3Client, CreateBucketCommand, PutBucketCorsCommand, PutBucketPolicyCommand } from '@aws-sdk/client-s3';
 
 export const createBucket = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context; 
+  const { app, data, params: { user } } = context; 
 
-  const client = new S3Client({ region: 'us-east-1' });
+  const client = new S3Client({ region: data.aws_region, credentials: app.awsCreds(user) });
 
   const command = new CreateBucketCommand({
     Bucket: data.bucket_name,
@@ -17,9 +17,9 @@ export const createBucket = async (context: HookContext): Promise<HookContext> =
 };
 
 export const putCorsPolicy = async (context: HookContext): Promise<HookContext> => {
-  const { app, data } = context;
+  const { app, data, params: { user } } = context;
 
-  const client = new S3Client({ region: 'us-east-1' });
+  const client = new S3Client({ region: data.aws_region, credentials: app.awsCreds(user) });
 
   const command = new PutBucketCorsCommand({
     Bucket: data.bucket_name,
@@ -34,9 +34,9 @@ export const putCorsPolicy = async (context: HookContext): Promise<HookContext> 
 };
 
 export const putBucketPolicy = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context;
+  const { app, data, params: { user } } = context;
 
-  const client = new S3Client({ region: 'us-east-1' });
+  const client = new S3Client({ region: data.aws_region, credentials: app.awsCreds(user) });
 
   const policy = {
     "Version": "2012-10-17",

@@ -1,4 +1,4 @@
-// aws/app-model.ts - A mongoose model
+// aws/cloudfront-model.ts - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
@@ -6,28 +6,41 @@ import { Application } from '../declarations';
 import { Model, Mongoose } from 'mongoose';
 
 export default function (app: Application): Model<any> {
-  const modelName = 'aws/app';
+  const modelName = 'aws/certificate2';
   const mongooseClient: Mongoose = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const schema = new Schema({
-    account_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'security/account',
-    },
     user_id: {
       type: Schema.Types.ObjectId,
-      ref: 'security/user',
       required: true,
     },
-    name: {
+    domain: {
       type: String,
-      unique: true,
       required: true,
     },
-    environment_ids: [{
-      type: Schema.Types.ObjectId,
-      ref: 'aws/environment',
-    }],
+    arn: {
+      type: String,
+      required: true
+    },
+    cname: {
+      name: {
+        type: String,
+      },
+      type: {
+        type: String,
+      },
+      value: {
+        type: String,
+      },
+    },
+    status: {
+      type: String,
+      required: true,
+    },
+    aws_region: {
+      type: String,
+      required: true,
+    }
   }, {
     timestamps: true
   });

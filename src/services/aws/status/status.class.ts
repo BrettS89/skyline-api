@@ -9,7 +9,12 @@ export class Status {
   }
 
   async find (params): Promise<any> {
-    const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+    const { query, user } = params;
+
+    const client = new ElasticBeanstalkClient({
+      region: query.aws_region,
+      credentials: this.app.awsCreds(user)
+    });
 
     const command = new DescribeEnvironmentsCommand({
       EnvironmentNames: [params.query.environment],

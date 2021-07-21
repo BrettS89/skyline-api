@@ -36,16 +36,6 @@ export default function (app: Application): Model<any> {
     github_access_key: {
       type: String,
     },
-    aws_region: {
-      type: String,
-      enum: [
-        'us-east-1',
-        'us-east-2',
-        'us-west-1',
-        'us-west-2',
-      ],
-      default: 'us-east-1',
-    },
     aws_keys: {
       access_key_id: {
         type: String,

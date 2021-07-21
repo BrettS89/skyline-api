@@ -1,19 +1,21 @@
+import { fastJoin } from 'feathers-hooks-common';
 import { authenticate } from '@/hooks';
-import { setupCertificate } from './hooks';
+import resolvers from '../environment.resolvers';
+import { addEnvVar } from './add-env-vars';
 
 export default {
   before: {
     all: [authenticate],
     find: [],
     get: [],
-    create: [setupCertificate],
+    create: [],
     update: [],
-    patch: [],
+    patch: [addEnvVar],
     remove: []
   },
 
   after: {
-    all: [],
+    all: [fastJoin(resolvers, ctx => ctx.params.resolve || {})],
     find: [],
     get: [],
     create: [],

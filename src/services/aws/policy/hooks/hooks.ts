@@ -28,9 +28,9 @@ const createPolicyObj = (bucketName: string): Record<string, any> => ({
 });
 
 export const createPolicy = async (context: HookContext): Promise<HookContext> => {
-  const { data } = context;
+  const { app, data, params: { user } } = context;
 
-  const client = new IAMClient({ region: 'us-east-1' });
+  const client = new IAMClient({ region: data.aws_region, credentials: app.awsCreds(user) });
 
   const params = {
     PolicyDocument: JSON.stringify(createPolicyObj(data.bucket_name)),

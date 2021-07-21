@@ -3,7 +3,7 @@ import { NotFound } from '@feathersjs/errors';
 import { ElasticBeanstalkClient, UpdateEnvironmentCommand } from '@aws-sdk/client-elastic-beanstalk';
 
 export const addEnvVar = async (context: HookContext): Promise<HookContext> => {
-  const { app, data, data: { environment_id, env_vars, remove }, id } = context;
+  const { app, data, data: { environment_id, env_vars, remove }, id, params: { user } } = context;
   
   if (!env_vars) return context;
 
@@ -36,18 +36,20 @@ export const addEnvVar = async (context: HookContext): Promise<HookContext> => {
 
   if (!environment.hosting_id) return context;
 
+  const credentials = app.awsCreds(user);
+
   if (remove) {
-    await deleteEnvVars(env_vars, foundApp.fetched_environments, environment_id);
+    await deleteEnvVars(env_vars, foundApp.fetched_environments, environment_id, credentials);
   } else {
-    await addEnvVarsToBeanstalk(newEnvVars, foundApp.fetched_environments, environment_id);
+    await addEnvVarsToBeanstalk(newEnvVars, foundApp.fetched_environments, environment_id, credentials);
   }
   
   
   return context;
 }
 
-const addEnvVarsToBeanstalk = async (vars: string[], fetchedEnvironments, environment_id): Promise<void> => {
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+const addEnvVarsToBeanstalk = async (vars: string[], fetchedEnvironments, environment_id, credentials): Promise<void> => {
+  const client = new ElasticBeanstalkClient({ region: 'us-east-1', credentials });
   const environmentName = getProviderEnvironment(fetchedEnvironments, environment_id);
   
   const command = new UpdateEnvironmentCommand({
@@ -62,8 +64,8 @@ const addEnvVarsToBeanstalk = async (vars: string[], fetchedEnvironments, enviro
   await client.send(command);
 };
 
-const deleteEnvVars = async (vars: string[], fetchedEnvironments, environment_id) => {
-  const client = new ElasticBeanstalkClient({ region: 'us-east-1' });
+const deleteEnvVars = async (vars: string[], fetchedEnvironments, environment_id, credentials) => {
+  const client = new ElasticBeanstalkClient({ region: 'us-east-1', credentials });
   const environmentName = getProviderEnvironment(fetchedEnvironments, environment_id);
   
   const command = new UpdateEnvironmentCommand({

@@ -1,4 +1,4 @@
-// aws/app-model.ts - A mongoose model
+// aws/environment-model.ts - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
@@ -6,27 +6,48 @@ import { Application } from '../declarations';
 import { Model, Mongoose } from 'mongoose';
 
 export default function (app: Application): Model<any> {
-  const modelName = 'aws/app';
+  const modelName = 'aws/environment';
   const mongooseClient: Mongoose = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const schema = new Schema({
-    account_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'security/account',
-    },
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: 'security/user',
-      required: true,
-    },
-    name: {
+    environment: {
       type: String,
-      unique: true,
       required: true,
     },
-    environment_ids: [{
+    hosting_id: {
       type: Schema.Types.ObjectId,
-      ref: 'aws/environment',
+      ref: 'aws/hosting',
+    },
+    aws_region: {
+      type: String,
+    },
+    kubernetes_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/kubernetes',
+    },
+    bucket_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/bucket',
+    },
+    cloudfront_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/cloudfront',
+    },
+    iam_user_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/iam-user',
+    },
+    policy_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/policy',
+    },
+    access_keys_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/access-keys',
+    },
+    env_vars: [{
+      type: String,
+      default: [],
     }],
   }, {
     timestamps: true
