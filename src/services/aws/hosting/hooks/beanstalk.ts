@@ -18,9 +18,16 @@ export const createBeanstalk = async (context: HookContext): Promise<HookContext
     },
   ];
 
-  if (data.provider_type.includes('single')) {
+  if (data.provider_type.includes('EC2')) {
     //@ts-ignore
     optionSettings.push(forSingleInstance);
+
+    optionSettings.push({
+      Namespace: 'aws:ec2:instances',
+      OptionName: 'InstanceTypes',
+      Value: data.provider_value,
+    });
+
     data.autoscale = false;
   } else {
     optionSettings.push({
