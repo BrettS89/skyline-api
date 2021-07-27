@@ -11,7 +11,7 @@ const forSingleInstance = {
 export const createBeanstalk = async (context: HookContext): Promise<HookContext> => {
   const { app, data, params: { user } } = context;
 
-  const applicationName = data.application_name + uuid().slice(32);
+  data.application_name = data.application_name + uuid().slice(32);
 
   const optionSettings = [
     {
@@ -44,14 +44,14 @@ export const createBeanstalk = async (context: HookContext): Promise<HookContext
 
   const client = new ElasticBeanstalkClient({ region: data.aws_region, credentials: app.awsCreds(user) });
   const command = new CreateApplicationCommand({
-    ApplicationName: applicationName,
+    ApplicationName: data.application_name,
   });
 
   await client.send(command);
 
   const command2 = new CreateEnvironmentCommand({
-    ApplicationName: applicationName,
-    EnvironmentName: `${applicationName}-env`,
+    ApplicationName: data.application_name,
+    EnvironmentName: `${data.application_name}-env`,
     SolutionStackName: data.app_type,
     OptionSettings: optionSettings,
   });
@@ -59,8 +59,8 @@ export const createBeanstalk = async (context: HookContext): Promise<HookContext
   const res = await client.send(command2);
 
   data.provider_arn = res.EnvironmentArn;
-  data.provider_name = `${applicationName}-env`;
-  data.provider_environment = `${applicationName}-env`;
+  data.provider_name = `${data.application_name}-env`;
+  data.provider_environment = `${data.application_name}-env`;
   data.auto_deploy = true;
   data.url = res.CNAME;
 
