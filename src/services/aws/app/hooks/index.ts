@@ -1,7 +1,5 @@
 import { fastJoin } from 'feathers-hooks-common';
 import { authenticate } from '@/hooks';
-import { getPipelineRole } from './hooks';
-import { addEnvVar } from './add-env-vars'; 
 import { deleteHostings } from './delete';
 import resolvers from '../app.resolvers';
 
@@ -10,9 +8,7 @@ export default {
     all: [authenticate],
     find: [],
     get: [],
-    create: [
-      // getPipelineRole,
-    ],
+    create: [],
     update: [],
     patch: [],
     remove: [

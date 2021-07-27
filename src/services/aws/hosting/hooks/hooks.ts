@@ -10,6 +10,7 @@ export * from './update-environment';
 export * from './webhook';
 export * from './execute-pipeline';
 export * from './https';
+export * from './ec2-https';
 
 export const getPipelineRole = async (context: HookContext): Promise<HookContext> => {
   const { app, data, params: { user } } = context;

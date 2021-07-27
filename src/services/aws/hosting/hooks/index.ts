@@ -3,6 +3,7 @@ import {
   addHttpsListener,
   createBucket,
   deleteBucket,
+  ec2Https,
   terminateBeanstalkEnvironment,
   deletePipeline,
   executePipleline,
@@ -23,7 +24,7 @@ export default {
     get: [],
     create: [
       setAwsRegion,
-      createBucket,
+      createBucket, 
       getPipelineRole,
       createBeanstalk,
       createPipeline,
@@ -32,6 +33,7 @@ export default {
     update: [],
     patch: [
       addHttpsListener,
+      ec2Https,
       executePipleline,
     ],
     remove: [

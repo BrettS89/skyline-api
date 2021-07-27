@@ -19,6 +19,9 @@ export default function (app: Application): Model<any> {
       type: String,
       required: true,
     },
+    cloudfront_url: {
+      type: String,
+    },
     environment_id: {
       type: String,
       required: true,
@@ -44,6 +47,9 @@ export default function (app: Application): Model<any> {
       required: true,
     },
     ssl_certificate_arn: {
+      type: String,
+    },
+    domain_name: {
       type: String,
     },
     provider_type: {

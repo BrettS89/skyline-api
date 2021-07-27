@@ -10,7 +10,6 @@ export default {
     create: [
       hashPassword,
       setRole,
-      // setupPipelineRoles,
     ],
     update: [],
     patch: [],
@@ -23,7 +22,9 @@ export default {
     get: [],
     create: [],
     update: [],
-    patch: [],
+    patch: [
+      setupPipelineRoles,
+    ],
     remove: []
   },
 
