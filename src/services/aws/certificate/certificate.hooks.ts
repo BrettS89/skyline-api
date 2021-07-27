@@ -1,5 +1,5 @@
 import { authenticate } from '@/hooks';
-import { setupCertificate } from './hooks';
+import { getCertificateStatus, setupCertificate } from './hooks';
 
 export default {
   before: {
@@ -14,7 +14,7 @@ export default {
 
   after: {
     all: [],
-    find: [],
+    find: [getCertificateStatus],
     get: [],
     create: [],
     update: [],

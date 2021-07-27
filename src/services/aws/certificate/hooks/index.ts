@@ -1,5 +1,5 @@
 import { HookContext } from '@feathersjs/feathers';
-import { ACMClient, DescribeCertificateCommand, ListCertificatesCommand, RequestCertificateCommand } from '@aws-sdk/client-acm';
+import { ACMClient, DescribeCertificateCommand, RequestCertificateCommand } from '@aws-sdk/client-acm';
 import { sleep } from '@/utilities';
 
 export const setupCertificate = async (context: HookContext): Promise<HookContext> => {
@@ -40,4 +40,30 @@ export const setupCertificate = async (context: HookContext): Promise<HookContex
   data.user_id = user?._id;
 
   return context;
-}
+};
+
+export const getCertificateStatus = async (context: HookContext): Promise<HookContext> => {
+  const { app, result, params: { user } } = context;
+  const credentials = app.awsCreds(user);
+
+  const certificates = await Promise.all(result.data.map(cert => {
+    const client = new ACMClient({ region: cert.aws_region, credentials });
+    const command = new DescribeCertificateCommand({
+      CertificateArn: cert.arn,
+    });
+
+    return client.send(command);
+  }));
+
+  const resultWithStatus = result.data.map((cert, i) => {
+    return {
+      ...cert,
+      //@ts-ignore
+      status: certificates[i]?.Certificate?.Status
+    }
+  });
+
+  result.data = resultWithStatus;
+
+  return context;
+};

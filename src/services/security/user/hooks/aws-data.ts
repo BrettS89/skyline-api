@@ -252,3 +252,17 @@ export const codePipelinePolicy = (taskExecutionArn: string | undefined) => {
     ]
 }
 };
+
+export const beanstalkTrust = 
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}

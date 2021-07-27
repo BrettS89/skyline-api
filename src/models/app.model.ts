@@ -21,7 +21,6 @@ export default function (app: Application): Model<any> {
     },
     name: {
       type: String,
-      unique: true,
       required: true,
     },
     environment_ids: [{
