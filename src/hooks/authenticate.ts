@@ -6,7 +6,19 @@ export const authenticate = async (context: HookContext): Promise<HookContext> =
   const { app, params } = context;
   const token = params?.headers?.authorization;
 
-  if (params.internal) return context;
+  if (params.internal) {
+    if (!params.query?.user_id) return context;
+
+    const user = await app
+      .service('security/user')
+      .get(params.query.user_id, { internal: true, query: { $resolve: { role: true } } });
+
+    if (!user) return context;
+
+    context.params.user = user;
+
+    return context;
+  }
 
   if (!token) {
     throw new NotAuthenticated('Missing token');
@@ -36,6 +48,7 @@ export const authenticate = async (context: HookContext): Promise<HookContext> =
           role: true,
         },
       },
+      internal: true,
     });
 
   if (!user) throw new NotFound('No user found with this id');

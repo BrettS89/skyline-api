@@ -29,7 +29,8 @@ export class Session {
             role: true,
           },
         },
-        paginate: false
+        paginate: false,
+        internal: true,
        }))[0];
 
     if (!user) {

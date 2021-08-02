@@ -1,15 +1,16 @@
-import { authenticate } from '@/hooks';
+import { disallow } from 'feathers-hooks-common';
+import { authenticate, authorization } from '@/hooks';
 import { getCertificateStatus, setupCertificate } from './hooks';
 
 export default {
   before: {
     all: [authenticate],
-    find: [],
-    get: [],
+    find: [authorization(true, false)],
+    get: [disallow()],
     create: [setupCertificate],
-    update: [],
-    patch: [],
-    remove: []
+    update: [disallow()],
+    patch: [disallow()],
+    remove: [],
   },
 
   after: {

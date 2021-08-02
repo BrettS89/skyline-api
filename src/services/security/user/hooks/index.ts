@@ -1,19 +1,20 @@
-import { fastJoin } from 'feathers-hooks-common';
+import { disallow, fastJoin } from 'feathers-hooks-common';
+import { authenticate, authorization } from '@/hooks';
 import { hashPassword, setRole, setupPipelineRoles } from './hooks';
 import resolvers from '@/services/security/user/user.resolvers';
 
 export default {
   before: {
     all: [],
-    find: [],
-    get: [],
+    find: [authenticate, authorization(true, false)],
+    get: [authenticate, authorization(true, false)],
     create: [
       hashPassword,
       setRole,
     ],
-    update: [],
-    patch: [],
-    remove: []
+    update: [disallow()],
+    patch: [authenticate, authorization(true, false)],
+    remove: [authenticate, authorization(true, false)],
   },
 
   after: {
