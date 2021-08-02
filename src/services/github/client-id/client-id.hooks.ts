@@ -2,7 +2,7 @@ import { authenticate } from '@/hooks';
 
 export default {
   before: {
-    all: [],
+    all: [authenticate],
     find: [],
     get: [],
     create: [],

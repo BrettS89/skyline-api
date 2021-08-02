@@ -4,7 +4,7 @@ const resolvers = {
   joins: {
     role: (...args: any) => async (resource: Record<string, any>, { app }: HookContext) => {
       resource.role = (
-        await app.service('security/role').get(resource.role_id)
+        await app.service('security/role').get(resource.role_id, { internal: true })
       )
     },
   }

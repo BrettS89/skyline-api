@@ -248,6 +248,18 @@ export const codePipelinePolicy = (taskExecutionArn: string | undefined) => {
             ],
             "Resource": "*",
             "Effect": "Allow"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "logs:PutLogEvents",
+                "logs:CreateLogStream",
+                "logs:CreateLogGroup",
+                "logs:PutRetentionPolicy"
+            ],
+            "Resource": [
+                "*"
+            ]
         }
     ]
 }

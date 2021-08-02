@@ -1,24 +1,22 @@
-import { fastJoin } from 'feathers-hooks-common';
 import { disallow } from 'feathers-hooks-common';
 import { authenticate, authorization } from '@/hooks';
-import resolvers from '../environment.resolvers';
-import { addEnvVar } from './add-env-vars';
+import getLogs from './hooks';
 
 export default {
   before: {
     all: [authenticate],
     find: [disallow()],
-    get: [authorization(false, true, false)],
-    create: [],
+    get: [],
+    create: [authorization(false, true)],
     update: [disallow()],
-    patch: [addEnvVar],
-    remove: []
+    patch: [disallow()],
+    remove: [authorization(false, true)],
   },
 
   after: {
-    all: [fastJoin(resolvers, ctx => ctx.params.resolve || {})],
+    all: [],
     find: [],
-    get: [],
+    get: [getLogs],
     create: [],
     update: [],
     patch: [],

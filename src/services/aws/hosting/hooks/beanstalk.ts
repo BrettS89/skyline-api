@@ -19,6 +19,21 @@ export const createBeanstalk = async (context: HookContext): Promise<HookContext
       OptionName: 'IamInstanceProfile',
       Value: 'aws-elasticbeanstalk-ec2-role',
     },
+    {
+      Namespace: 'aws:elasticbeanstalk:cloudwatch:logs',
+      OptionName: 'StreamLogs',
+      Value: 'true',
+    },
+    {
+      Namespace: 'aws:elasticbeanstalk:cloudwatch:logs',
+      OptionName: 'DeleteOnTerminate',
+      Value: 'true',
+    },
+    {
+      Namespace: 'aws:elasticbeanstalk:hostmanager',
+      OptionName: 'LogPublicationControl',
+      Value: 'true',
+    },
   ];
 
   if (data.provider_type.includes('EC2')) {

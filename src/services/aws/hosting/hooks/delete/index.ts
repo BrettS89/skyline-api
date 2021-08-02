@@ -73,5 +73,19 @@ export const deleteBucket = async (context: HookContext): Promise<HookContext> =
 
   await client.send(deleteBucket);
 
+  context.params.query = {}
+
+  return context;
+};
+
+export const deleteLogs = async (context: HookContext): Promise<HookContext> => {
+  const { app, params: { hosting, user } } = context;
+
+  await app
+    .service('aws/log')
+    .remove(hosting.log_id, { internal: true });
+
+  console.log("LOGS REMOVED")
+
   return context;
 };

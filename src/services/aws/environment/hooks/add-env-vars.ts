@@ -5,7 +5,7 @@ import { ElasticBeanstalkClient, UpdateEnvironmentCommand } from '@aws-sdk/clien
 export const addEnvVar = async (context: HookContext): Promise<HookContext> => {
   const { app, data, data: { env_vars, remove }, id, params: { user } } = context;
   
-  if (!env_vars) return context;
+  if (!env_vars || !env_vars.length) return context;
 
   const environment = await app
     .service('aws/environment')

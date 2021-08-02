@@ -83,6 +83,10 @@ export default function (app: Application): Model<any> {
     },
     webhook_name: {
       type: String,
+    },
+    log_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'aws/log',
     }
   }, {
     timestamps: true,

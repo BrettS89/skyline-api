@@ -1,15 +1,15 @@
-import { fastJoin } from 'feathers-hooks-common';
-import { authenticate } from '@/hooks';
+import { disallow, fastJoin } from 'feathers-hooks-common';
+import { authenticate, authorization } from '@/hooks';
 import { deleteHostings } from './delete';
 import resolvers from '../app.resolvers';
 
 export default {
   before: {
     all: [authenticate],
-    find: [],
+    find: [authorization(true, false)],
     get: [],
     create: [],
-    update: [],
+    update: [disallow()],
     patch: [],
     remove: [
       deleteHostings,

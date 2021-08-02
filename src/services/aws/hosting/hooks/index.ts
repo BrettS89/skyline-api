@@ -1,8 +1,11 @@
-import { authenticate } from '@/hooks';
+import { disallow } from 'feathers-hooks-common';
+import { authenticate, authorization } from '@/hooks';
 import {
   addHttpsListener,
   createBucket,
+  createLog,
   deleteBucket,
+  deleteLogs,
   ec2Https,
   terminateBeanstalkEnvironment,
   deletePipeline,
@@ -20,8 +23,8 @@ import {
 export default {
   before: {
     all: [authenticate],
-    find: [],
-    get: [],
+    find: [authorization(false, true)],
+    get: [authorization(false, true)],
     create: [
       setAwsRegion,
       createBucket, 
@@ -30,7 +33,7 @@ export default {
       createPipeline,
       registerWebhook,
     ],
-    update: [],
+    update: [disallow()],
     patch: [
       addHttpsListener,
       ec2Https,
@@ -51,10 +54,13 @@ export default {
     get: [],
     create: [
       updateEnvironmentHook,
+      createLog,
     ],
     update: [],
     patch: [],
-    remove: []
+    remove: [
+      deleteLogs,
+    ]
   },
 
   error: {
