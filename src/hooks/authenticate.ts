@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 export const authenticate = async (context: HookContext): Promise<HookContext> => {
   const { app, params } = context;
   const token = params?.headers?.authorization;
-
+  console.log(params.headers)
   if (params.internal) {
     if (!params.query?.user_id) return context;
 
