@@ -36,17 +36,14 @@ export const ec2Https = async (context: HookContext): Promise<HookContext> => {
         Quantity: 1,
       },
       DefaultCacheBehavior: {
+        AllowedMethods: {
+          Items: ['GET', 'HEAD', 'OPTIONS', 'PUT', 'PATCH', 'POST', 'DELETE'],
+          Quantity: 7,
+        },
         TargetOriginId: data.url,
         ViewerProtocolPolicy: 'redirect-to-https',
-        MinTTL: 1000,
-        ForwardedValues: {
-          Cookies: { Forward: 'all' },
-          Headers: { Quantity: 0 },
-          QueryString: false,
-          QueryStringCacheKeys: { Quantity: 0 },
-          //@ts-ignore
-          CachePolicy: 'CachingDisabled',
-        },
+        CachePolicyId: '4135ea2d-6df8-44a3-9df3-4b5a84be39ad',
+        OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3',
       },
       ViewerCertificate: {
         ACMCertificateArn: data.ssl_certificate_arn,
