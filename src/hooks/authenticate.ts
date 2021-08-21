@@ -52,8 +52,8 @@ export const authenticate = async (context: HookContext): Promise<HookContext> =
       },
       internal: true,
     });
-console.log(user)
-  if (!user) throw new NotFound('No user found with this id');
+
+    if (!user) throw new NotFound('No user found with this id');
 
   context.params.user = user;
 
