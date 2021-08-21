@@ -35,7 +35,6 @@ export class Session {
         internal: true,
        }))[0];
 
-    console.log('AFTER');
 
     if (!user) {
       throw new NotFound('No user found with this email');
