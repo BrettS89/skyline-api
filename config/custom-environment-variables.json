@@ -8,5 +8,7 @@
     "public": "S3_PUBLIC_KEY",
     "secret": "S3_SECRET_KEY"
   },
-  "stripeSecret": "STRIPE_SECRET"
+  "stripeSecret": "STRIPE_SECRET",
+  "developmentPlan": "DEVELOPMENT_PLAN_ID",
+  "productionPlan": "PRODUCTION_PLAN_ID"
 }

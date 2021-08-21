@@ -1,36 +1,31 @@
 import { HookContext } from '@feathersjs/feathers';
-import Stripe from 'stripe';
 
 export const addCreditCard = async (context: HookContext): Promise<HookContext> => {
   let { app, data, params: { user } } = context;
 
   const {
     number,
-    exp_month,
-    exp_year,
+    exp_date,
     cvc,
   } = data;
 
-  const stripe = new Stripe(app.get('stripeSecret'), {
-    apiVersion: '2020-08-27'
-  });
-
   //@ts-ignore
-  const { id, card: { brand, last4 } } = await stripe.tokens.create({
+  const { id, card: { brand, last4 } } = await app.stripe.tokens.create({
+    //@ts-ignore
     card: {
       number,
-      exp_month,
-      exp_year,
+      exp_month: Number(exp_date.split('/')[0]),
+      exp_year: Number(exp_date.split('/')[1]),
       cvc,
     },
   });
 
-  const response = await stripe.customers.create({
+  const response = await app.stripe.customers.create({
     source: id,
     email: user?.email,
   });
 
-  data = {
+  context.data = {
     card_id: id,
     customer_id: response.id,
     user_id: user?._id,

@@ -1,5 +1,6 @@
+import { disallow } from 'feathers-hooks-common';
 import { authenticate } from '@/hooks';
-import { subscribeToPlan } from './hooks';
+import { cancelSubscription, subscribeToPlan } from './hooks';
 
 export default {
   before: {
@@ -7,13 +8,13 @@ export default {
       authenticate,
     ],
     find: [],
-    get: [],
+    get: [disallow()],
     create: [
       subscribeToPlan,
     ],
-    update: [],
+    update: [disallow()],
     patch: [],
-    remove: [],
+    remove: [cancelSubscription],
   },
 
   after: {

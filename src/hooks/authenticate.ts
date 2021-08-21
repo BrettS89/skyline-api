@@ -7,11 +7,11 @@ export const authenticate = async (context: HookContext): Promise<HookContext> =
   const token = params?.headers?.authorization;
 
   if (params.internal) {
-    if (!params.query?.user_id) return context;
+    if (!params.query?.get_user_id) return context;
 
     const user = await app
       .service('security/user')
-      .get(params.query.user_id, { internal: true, query: { $resolve: { role: true } } });
+      .get(params.query.user_id, { internal: true, query: { $resolve: { role: true, stripe: true, plan: true, } } });
 
     if (!user) return context;
 
@@ -46,11 +46,13 @@ export const authenticate = async (context: HookContext): Promise<HookContext> =
       query: {
         $resolve: {
           role: true,
+          stripe: true,
+          plan: true,
         },
       },
       internal: true,
     });
-
+console.log(user)
   if (!user) throw new NotFound('No user found with this id');
 
   context.params.user = user;
