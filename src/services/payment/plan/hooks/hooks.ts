@@ -15,7 +15,7 @@ export const subscribeToPlan = async (context: HookContext): Promise<HookContext
         price: app.get(data.plan + 'Plan'),
       },
     ],
-  });
+  });  
 
   context.data = {
     plan: data.plan,
