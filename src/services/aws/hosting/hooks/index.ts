@@ -2,6 +2,7 @@ import { disallow } from 'feathers-hooks-common';
 import { authenticate, authorization } from '@/hooks';
 import {
   addHttpsListener,
+  checkPlan,
   createBucket,
   createLog,
   deleteBucket,
@@ -26,6 +27,7 @@ export default {
     find: [authorization(false, true)],
     get: [authorization(false, true)],
     create: [
+      checkPlan,
       setAwsRegion,
       createBucket, 
       getPipelineRole,

@@ -12,6 +12,7 @@ export * from './execute-pipeline';
 export * from './https';
 export * from './ec2-https';
 export * from './createLog';
+export * from './check-plan';
 
 export const getPipelineRole = async (context: HookContext): Promise<HookContext> => {
   const { app, data, params: { user } } = context;

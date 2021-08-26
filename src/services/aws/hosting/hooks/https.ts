@@ -1,4 +1,5 @@
 import { HookContext } from '@feathersjs/feathers';
+import { BadRequest } from '@feathersjs/errors';
 import { DescribeEnvironmentResourcesCommand, ElasticBeanstalkClient, UpdateEnvironmentCommand } from '@aws-sdk/client-elastic-beanstalk';
 import { ElasticLoadBalancingV2Client, DescribeListenersCommand, ModifyListenerCommand } from '@aws-sdk/client-elastic-load-balancing-v2';
 
@@ -6,6 +7,10 @@ export const addHttpsListener = async (context: HookContext): Promise<HookContex
   const { app, data, params: { user } } = context;
 
   if (!data.ssl_certificate_arn || !data.environment_name) return context;
+
+  if (user?.plan?.plan !== 'production') {
+    throw new BadRequest('Your plan does not support https forwarding');
+  }
 
   const credentials = app.awsCreds(user)
 

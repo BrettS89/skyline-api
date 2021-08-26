@@ -87,6 +87,10 @@ export default function (app: Application): Model<any> {
     log_id: {
       type: Schema.Types.ObjectId,
       ref: 'aws/log',
+    },
+    user_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'security/user',
     }
   }, {
     timestamps: true,
