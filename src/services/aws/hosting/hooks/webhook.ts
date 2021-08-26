@@ -4,6 +4,8 @@ import { CodePipelineClient, PutWebhookCommand, RegisterWebhookWithThirdPartyCom
 export const registerWebhook = async (context: HookContext): Promise<HookContext> => {
   const { app, data, params: { user } } = context;
 
+  context.data.user_id = user?._id;
+
   if (!data.auto_deploy) return context;
 
   const client = new CodePipelineClient({ region: data.aws_region, credentials: app.awsCreds(user) });

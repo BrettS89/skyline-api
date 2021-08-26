@@ -27,11 +27,14 @@ export class Session {
           email,
           $resolve: {
             role: true,
+            stripe: true,
+            plan: true,
           },
         },
         paginate: false,
         internal: true,
        }))[0];
+
 
     if (!user) {
       throw new NotFound('No user found with this email');

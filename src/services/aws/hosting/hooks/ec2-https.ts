@@ -1,11 +1,15 @@
 import { HookContext } from '@feathersjs/feathers';
+import { BadRequest } from '@feathersjs/errors';
 import { CloudFrontClient, CreateDistributionCommand } from '@aws-sdk/client-cloudfront';
-import app from '@/app';
 
 export const ec2Https = async (context: HookContext): Promise<HookContext> => {
-  const { data, params: { user } } = context;
+  const { app, data, params: { user } } = context;
   if (!data.ssl_certificate_arn || !data.domain_name) {
     return context;
+  }
+
+  if (user?.plan?.plan !== 'production') {
+    throw new BadRequest('Your plan does not support https forwarding');
   }
 
   const client = new CloudFrontClient({ region: data.aws_region, credentials: app.awsCreds(user) });
@@ -53,11 +57,11 @@ export const ec2Https = async (context: HookContext): Promise<HookContext> => {
   });
 
   const res = await client.send(command);
-  console.log(res.Distribution);
+
   delete data.aws_region;
   delete data.url;
 
   data.cloudfront_url = res.Distribution?.DomainName;
-console.log(context.data);
+
   return context;
 };

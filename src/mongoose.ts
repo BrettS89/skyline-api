@@ -3,7 +3,6 @@ import { Application } from './declarations';
 import logger from './logger';
 
 export default function (app: Application): void {
-  console.log(app.get('mongodb'));
   mongoose.connect(
     app.get('mongodb'),
     { useCreateIndex: true, useNewUrlParser: true }

@@ -23,9 +23,7 @@ export class Status {
     let res: any;
     try {
       res = await client.send(command);
-    } catch(e) {
-      console.log('ERROR', e);
-    }
+    } catch(e) {}
     
     return res?.Environments?.[0];
   }

@@ -22,6 +22,8 @@ import awsEnvironment from './aws/environment/environment.service';
 import awsKubernetes from './aws/kubernetes/kubernetes.service';
 import awsCertificate from './aws/certificate/certificate.service';
 import awsLog from './aws/log/log.service';
+import paymentStripe from './payment/stripe/stripe.service';
+import paymentPlan from './payment/plan/plan.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application): void {
@@ -48,4 +50,6 @@ export default function (app: Application): void {
   app.configure(awsKubernetes);
   app.configure(awsCertificate);
   app.configure(awsLog);
+  app.configure(paymentStripe);
+  app.configure(paymentPlan);
 }

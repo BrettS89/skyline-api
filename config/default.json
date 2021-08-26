@@ -8,6 +8,7 @@
   },
   "jwtSecret": "placeholder",
   "mongodb": "mongodb://localhost:27017/skyline_api",
+  "stripeSecret": "test",
   "bucketCorsRules": [{
     "AllowedHeaders": [
       "*"

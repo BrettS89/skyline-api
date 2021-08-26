@@ -85,7 +85,5 @@ export const deleteLogs = async (context: HookContext): Promise<HookContext> => 
     .service('aws/log')
     .remove(hosting.log_id, { internal: true });
 
-  console.log("LOGS REMOVED")
-
   return context;
 };
