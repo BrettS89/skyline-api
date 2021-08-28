@@ -34,3 +34,29 @@ export const cancelSubscription = async (context: HookContext): Promise<HookCont
 
   return context;
 };
+
+export const upgradePlan = async (context: HookContext): Promise<HookContext> => {
+  const { app, data, params: { user } } = context;
+
+  if (data.plan !== 'production') {
+    throw new BadRequest('Invalid plan');
+  }
+
+  if (!user?.plan) {
+    throw new BadRequest('You do not have a current plan');
+  }
+
+  if (user?.plan?.plan === data.plan) {
+    throw new BadRequest('You are already subscribed to this plan');
+  }
+
+  await app.stripe.subscriptions.update(user?.plan?.subscription_id, {
+    items: [
+      {
+        price: app.get(data.plan + 'Plan'),
+      },
+    ],
+  });
+
+  return context;
+};
