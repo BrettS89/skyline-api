@@ -24,6 +24,7 @@ import awsCertificate from './aws/certificate/certificate.service';
 import awsLog from './aws/log/log.service';
 import paymentStripe from './payment/stripe/stripe.service';
 import paymentPlan from './payment/plan/plan.service';
+import communicationMessage from './communication/message/message.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application): void {
@@ -52,4 +53,5 @@ export default function (app: Application): void {
   app.configure(awsLog);
   app.configure(paymentStripe);
   app.configure(paymentPlan);
+  app.configure(communicationMessage);
 }

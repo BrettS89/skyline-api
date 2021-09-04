@@ -16,7 +16,6 @@ import {
   createPipeline,
   registerWebhook,
   removeWebhook,
-  setAwsRegion,
   setHostingInParams,
   updateEnvironmentHook,
 } from './hooks';
@@ -28,7 +27,6 @@ export default {
     get: [authorization(false, true)],
     create: [
       checkPlan,
-      setAwsRegion,
       createBucket, 
       getPipelineRole,
       createBeanstalk,

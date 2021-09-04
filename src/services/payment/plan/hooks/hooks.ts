@@ -11,11 +11,11 @@ export const subscribeToPlan = async (context: HookContext): Promise<HookContext
   const subscription = await app.stripe.subscriptions.create({
     customer: user.stripe.customer_id,
     items: [
-      { 
+      {
         price: app.get(data.plan + 'Plan'),
       },
     ],
-  });  
+  });
 
   context.data = {
     plan: data.plan,
@@ -50,9 +50,14 @@ export const upgradePlan = async (context: HookContext): Promise<HookContext> =>
     throw new BadRequest('You are already subscribed to this plan');
   }
 
+  const subscription = await app.stripe.subscriptions.retrieve(user?.plan?.subscription_id);
+
   await app.stripe.subscriptions.update(user?.plan?.subscription_id, {
+    cancel_at_period_end: false,
+    proration_behavior: 'always_invoice',
     items: [
       {
+        id: subscription.items.data[0].id,
         price: app.get(data.plan + 'Plan'),
       },
     ],

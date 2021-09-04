@@ -59,7 +59,6 @@ export const getPipelineRole = async (context: HookContext): Promise<HookContext
   }
 };
 
-export const setAwsRegion = (context: HookContext) => {
-  context.data.aws_region = 'us-east-1';
-  return context;
+export const checkExistingHosting = (context: HookContext) => {
+
 };
