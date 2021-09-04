@@ -16,6 +16,7 @@ import {
   createPipeline,
   registerWebhook,
   removeWebhook,
+  setAwsRegion,
   setHostingInParams,
   updateEnvironmentHook,
 } from './hooks';
