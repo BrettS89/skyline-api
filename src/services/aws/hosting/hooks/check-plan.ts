@@ -10,7 +10,7 @@ export const checkPlan = async (context: HookContext): Promise<HookContext> => {
   };
 
   const getPlan = () => app
-    .service('pricing/plan')
+    .service('payment/plan')
     .find({
       query: { user_id: user?._id },
       internal: true,
@@ -18,7 +18,7 @@ export const checkPlan = async (context: HookContext): Promise<HookContext> => {
     })
     .then(plans => plans[0]);
 
-  const getHostings = app
+  const getHostings = () => app
     .service('aws/hosting')
     .find({
       query: { user_id: user?._id },
@@ -28,13 +28,13 @@ export const checkPlan = async (context: HookContext): Promise<HookContext> => {
 
   const [plan, hostings] = await Promise.all([getPlan(), getHostings()]);
 
-  const hostingsLimit = planLimits[plan.plan] || 1;
+  const hostingsLimit = planLimits[plan?.plan] || 1;
 
-  if (hostings.length >= hostingsLimit) {
-    throw new BadRequest(`Your plan only supports up to ${hostingsLimit} environment(s)`);
-  }
+  // if (hostings.length >= hostingsLimit) {
+  //   throw new BadRequest(`Your plan only supports up to ${hostingsLimit} environment(s)`);
+  // }
 
-  const isAutoScale = data.provider_type.includes('EC2');
+  const isAutoScale = data.provider_type.toUpperCase().includes('ELASTIC');
 
   if ((plan?.plan !== 'production') && isAutoScale) {
     throw new BadRequest('Your plan does not support Elastic Beanstalk environments');
