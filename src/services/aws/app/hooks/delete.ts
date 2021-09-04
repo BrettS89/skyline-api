@@ -20,6 +20,8 @@ export const deleteHostings = async (context: HookContext): Promise<HookContext>
       })
   );
 
+  console.log('hi')
+
   await Promise.all(foundApp.environments.map(e => {
     return app.service('aws/environment').remove(e._id, { internal: true });
   }));
